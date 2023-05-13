@@ -12,6 +12,10 @@ import com.example.bloodbank.service.AppointmentService;
 import com.example.bloodbank.service.LocationService;
 import com.example.bloodbank.service.UserService;
 import lombok.AllArgsConstructor;
+import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +25,17 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 //Desparte controller dupa fiecare actiune
+
+
+//DE IMPLEMENTAT FEATURE IN PLUS
+//SALVARE STATUS DOCTORI INTR-UN EXCEL, PDF, CARE SA AJUTE APLICATIA
+//RAPORT AL PROGRAMILOR, CATI LITRI DE SANGE S-AU DONAT, CALL
 @RestController
 @CrossOrigin("http://localhost:3000")
 @AllArgsConstructor
@@ -38,6 +46,8 @@ public class UserController {
     private final LocationService locationService;
     private final AppointmentService appointmentService;
     private final AppointmentRepository appointmentRepository;
+    private static final Logger logger =
+            LoggerFactory.getLogger(UserController.class);
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserRegDto user) {
@@ -147,10 +157,12 @@ public class UserController {
 
     }
 
-    @PostMapping("/appointment")
+    private Scheduler scheduler;
+    @PostMapping("/appointment/{id}")
     public ResponseEntity<?> appointment(@RequestBody AppointmentDto appointmentDto,
+                                         @PathVariable("id") Long id,
                                          BindingResult result) {
-        appointmentService.save(appointmentDto);
+        appointmentService.save(appointmentDto, id);
         return ResponseEntity.ok(appointmentDto);
     }
 

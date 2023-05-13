@@ -1,9 +1,11 @@
 package com.example.bloodbank.service;
 
 import com.example.bloodbank.appuser.Appointment;
+import com.example.bloodbank.appuser.Locations;
 import com.example.bloodbank.appuser.Users;
 import com.example.bloodbank.dto.AppointmentDto;
 import com.example.bloodbank.email.EmailService;
+import com.example.bloodbank.email.Scheduler;
 import com.example.bloodbank.repo.AppointmentRepository;
 import com.example.bloodbank.repo.UserRepository;
 import lombok.AllArgsConstructor;
@@ -20,14 +22,18 @@ public class AppointmentServiceImpl implements AppointmentService{
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final Scheduler scheduler;
     @Override
     public Appointment save(AppointmentDto appointmentDto, Long id) {
         Appointment app =
                 new Appointment(appointmentDto.getBloodtype(),appointmentDto.getProg());
-        Users user = userRepository.getById(id);
+        Users user = userRepository.findById1(id); //de aici returneaza null
+        app.setLocations(user.getBloodbank());
+        app.setUser(user);
         String email = user.getEmail();
         String link = "http://localhost:8080/appointment/{id}";
         emailService.send(email,buildEmail(user.getNume(),link));
+        scheduler.sendReminderEmails();
         return appointmentRepository.save(app);
 
     }

@@ -24,7 +24,6 @@ public class Locations {
 
     private int inceput;
     private int sfarsit;
-
     private int nrmaximdon;
 
     @OneToMany(mappedBy = "locations")

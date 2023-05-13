@@ -27,6 +27,10 @@ public class Appointment {
     @JsonBackReference
     private Locations locations;
 
+    @ManyToOne
+    @JsonBackReference
+    private Users user;
+
     public Appointment(String bloodtype, LocalDate prog) {
         this.bloodtype = bloodtype;
         this.prog = prog;

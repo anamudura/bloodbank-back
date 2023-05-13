@@ -5,6 +5,14 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
+
+//PANA DATA VIITOARE - CE FEATURE VREM IN PLUS
+//O PARTE DIN DOCUMENTATIE
+//DIAGRGRAMA USE CASE
+//DIAGRAMA DE SECVENTA
+// 18 - IMPL
+// 25 - PROICETELELE
 
 @Getter
 @Setter
@@ -43,6 +51,10 @@ public class Users {
                     { @JoinColumn(name = "location_id", referencedColumnName = "id") })
     @JsonManagedReference
     private Locations bloodbank;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Appointment> app;
 
     public Long getId() {
         return id;
