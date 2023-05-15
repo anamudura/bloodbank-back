@@ -14,5 +14,6 @@ public interface AppointmentService {
     Appointment save(AppointmentDto appointmentDto, Long id);
     List<Appointment> getAppoint(LocalDate nume);
     List<Appointment> getappDoc(LocalDate date, Long id1, Long id2);
+    Appointment updateConfirmation(Long appointmentId, Boolean confirmed) throws Exception;
 
 }

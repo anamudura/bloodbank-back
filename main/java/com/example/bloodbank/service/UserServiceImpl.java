@@ -3,7 +3,6 @@ package com.example.bloodbank.service;
 import com.example.bloodbank.appuser.Locations;
 import com.example.bloodbank.appuser.Role;
 import com.example.bloodbank.appuser.Users;
-import com.example.bloodbank.repo.DoctorRepository;
 import com.example.bloodbank.repo.RoleRepository;
 import com.example.bloodbank.repo.UserRepository;
 import com.example.bloodbank.dto.UserRegDto;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final DoctorRepository doctorRepository;
     private final RoleRepository roleRepository;
 
     @Override

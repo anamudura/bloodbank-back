@@ -1,20 +1,17 @@
 package com.example.bloodbank.appuser;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +20,8 @@ public class Appointment {
     private String bloodtype;
     private LocalDate prog;
 
+    //DE ADAUGAT SI IN FRONT END CONFIRMARI PROGRAMARI PENTRU STATISTICI
+    private Boolean confirmed;
     @ManyToOne
     @JsonBackReference
     private Locations locations;
@@ -34,5 +33,6 @@ public class Appointment {
     public Appointment(String bloodtype, LocalDate prog) {
         this.bloodtype = bloodtype;
         this.prog = prog;
+        this.confirmed = false;
     }
 }

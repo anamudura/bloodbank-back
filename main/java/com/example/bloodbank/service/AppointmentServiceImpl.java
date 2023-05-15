@@ -9,6 +9,7 @@ import com.example.bloodbank.email.Scheduler;
 import com.example.bloodbank.repo.AppointmentRepository;
 import com.example.bloodbank.repo.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,15 @@ public class AppointmentServiceImpl implements AppointmentService{
     public List<Appointment> getappDoc(LocalDate date, Long id1, Long id2) {
         return appointmentRepository.findByLocations_IdAndLocations_User_IdAndProg(id1,id2,LocalDate.now());
     }
+
+    @Override
+    public Appointment updateConfirmation(Long appointmentId, Boolean confirmed) throws Exception {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new Exception("Not found"));
+        appointment.setConfirmed(confirmed);
+        return appointmentRepository.save(appointment);
+    }
+
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +

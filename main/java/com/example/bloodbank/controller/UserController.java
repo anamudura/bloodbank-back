@@ -5,6 +5,7 @@ import com.example.bloodbank.appuser.Locations;
 import com.example.bloodbank.appuser.Users;
 import com.example.bloodbank.dto.AppointmentDto;
 import com.example.bloodbank.dto.UserRegDto;
+import com.example.bloodbank.pdf.PdfGenerator;
 import com.example.bloodbank.repo.AppointmentRepository;
 import com.example.bloodbank.repo.RoleRepository;
 import com.example.bloodbank.repo.UserRepository;
@@ -12,21 +13,20 @@ import com.example.bloodbank.service.AppointmentService;
 import com.example.bloodbank.service.LocationService;
 import com.example.bloodbank.service.UserService;
 import lombok.AllArgsConstructor;
-import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -46,8 +46,7 @@ public class UserController {
     private final LocationService locationService;
     private final AppointmentService appointmentService;
     private final AppointmentRepository appointmentRepository;
-    private static final Logger logger =
-            LoggerFactory.getLogger(UserController.class);
+    private final PdfGenerator pdfGenerator;
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserRegDto user) {
@@ -157,7 +156,6 @@ public class UserController {
 
     }
 
-    private Scheduler scheduler;
     @PostMapping("/appointment/{id}")
     public ResponseEntity<?> appointment(@RequestBody AppointmentDto appointmentDto,
                                          @PathVariable("id") Long id,
@@ -182,6 +180,29 @@ public class UserController {
         Locations loc = userService.getLocationForUser(id);
         List<Appointment> app = appointmentRepository.findByIdAndLocations_Id(loc.getId(),id,pageable);
         return ResponseEntity.ok(app);
+    }
+    @PostMapping("allapp/{id}/confirmed")
+    public ResponseEntity<Appointment> updateConfirmation(
+            @PathVariable("id") Long id,
+            @PathVariable("confirmed") Boolean confirmed
+
+    ) throws Exception {
+        Appointment updatedAppointment = appointmentService.updateConfirmation(id, confirmed);
+        return ResponseEntity.ok(updatedAppointment);
+    }
+
+    @GetMapping("/stats/{id}")
+    public ResponseEntity<byte[]> exportPdf(@PathVariable("id") Long id)
+    {
+        byte[] pdf = pdfGenerator.generatePdf(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "exported.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdf);
+
     }
 
 }
