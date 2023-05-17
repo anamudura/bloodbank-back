@@ -13,8 +13,6 @@ import com.example.bloodbank.service.AppointmentService;
 import com.example.bloodbank.service.LocationService;
 import com.example.bloodbank.service.UserService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,17 +23,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
 import java.time.LocalDate;
 
 import java.util.List;
 import java.util.Optional;
 
-//Desparte controller dupa fiecare actiune
-
-
-//DE IMPLEMENTAT FEATURE IN PLUS
-//SALVARE STATUS DOCTORI INTR-UN EXCEL, PDF, CARE SA AJUTE APLICATIA
-//RAPORT AL PROGRAMILOR, CATI LITRI DE SANGE S-AU DONAT, CALL
 @RestController
 @CrossOrigin("http://localhost:3000")
 @AllArgsConstructor
@@ -174,15 +167,16 @@ public class UserController {
     }
 
     @GetMapping("/allapp")
-    public ResponseEntity<List<Appointment>> getAllApp(@RequestParam("id")Long id, @RequestParam("page") int page,
+    public ResponseEntity<List<Appointment>> getAllApp(@RequestParam("id") Long id, @RequestParam("page") int page,
                                                        @RequestParam("size") int size) {
-        Pageable pageable = PageRequest.of(page,size);
+        Pageable pageable = PageRequest.of(page, size);
         Locations loc = userService.getLocationForUser(id);
-        List<Appointment> app = appointmentRepository.findByIdAndLocations_Id(loc.getId(),id,pageable);
+        List<Appointment> app = appointmentRepository.findByIdAndLocations_Id(loc.getId(), id, pageable);
         return ResponseEntity.ok(app);
     }
+
     @PostMapping("allapp/{id}")
-    public ResponseEntity<Appointment> updateConfirmation(
+    public ResponseEntity<Appointment> confirmApp(
             @PathVariable("id") Long id
 
     ) throws Exception {
@@ -190,10 +184,20 @@ public class UserController {
         return ResponseEntity.ok(updatedAppointment);
     }
 
+    @PostMapping("allappd/{id}")
+    public ResponseEntity<Appointment> denyApp(
+            @PathVariable("id") Long id
+
+    ) throws Exception {
+        Appointment updatedAppointment = appointmentService.updateConfirmation(id, false);
+        return ResponseEntity.ok(updatedAppointment);
+    }
+
     @GetMapping("/stats/{id}")
-    public ResponseEntity<byte[]> exportPdf(@PathVariable("id") Long id)
-    {
-        byte[] pdf = pdfGenerator.generatePdf(id);
+    public ResponseEntity<byte[]> exportPdf(@PathVariable("id") Long id,
+                                            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                                            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+        byte[] pdf = pdfGenerator.generatePdf(id,start,end);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("attachment", "exported.pdf");

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
 
 
 @AllArgsConstructor
@@ -18,10 +19,10 @@ import java.io.ByteArrayOutputStream;
 public class PdfGenerator {
     private final AppointmentRepository appointmentRepository;
     private final BankService bankService;
-    public byte[] generatePdf(Long id) {
+    public byte[] generatePdf(Long id, LocalDate start, LocalDate end) {
         try {
 
-            BankStatistics bankPDF = bankService.calculateStats(id);
+            BankStatistics bankPDF = bankService.calculateStats(id,start,end);
             // Create a new document
             Document document = new Document();
 
@@ -39,10 +40,12 @@ public class PdfGenerator {
             document.add(new Paragraph("Number of Liters: " + bankPDF.getNumberOfLiters()));
             document.add(new Paragraph("Number of Total Appointments: " + bankPDF.getNumberOfTotalAppointments()));
             document.add(new Paragraph("Number of Confirmed Appointments: " + bankPDF.getNumberOfConfirmedAppointments()));
+            document.add(new Paragraph("Number of Denied Appointments: "+bankPDF.getNumberofDeniedApp()));
             document.add(new Paragraph("O: " + bankPDF.getO()));
             document.add(new Paragraph("A: " + bankPDF.getA()));
             document.add(new Paragraph("B: " + bankPDF.getB()));
             document.add(new Paragraph("AB: " + bankPDF.getAB()));
+
 
             // Close the document
             document.close();

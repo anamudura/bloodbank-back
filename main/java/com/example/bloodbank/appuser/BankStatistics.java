@@ -22,6 +22,7 @@ public class BankStatistics {
     private float numberOfLiters;
     private int numberOfTotalAppointments;
     private int numberOfConfirmedAppointments;
+    private int numberofDeniedApp;
     private int O;
     private int A;
     private int B;

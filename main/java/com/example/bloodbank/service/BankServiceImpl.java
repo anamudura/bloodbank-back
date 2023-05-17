@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,7 +17,7 @@ public class BankServiceImpl implements BankService{
 
     private final AppointmentRepository appointmentRepository;
     @Override
-    public BankStatistics calculateStats(Long id) {
+    public BankStatistics calculateStats(Long id, LocalDate start, LocalDate end) {
         BankStatistics bankStatistics = new BankStatistics();
         List<Appointment> totalapp = appointmentRepository.findByLocations_Id(id);
         int totalApp = 0;
@@ -27,19 +28,21 @@ public class BankServiceImpl implements BankService{
         int totalAB = 0;
         int totalConfi = 0;
         for(Appointment app: totalapp) {
-            totalApp += 1;
-            if(app.getBloodtype().contains("AB")) {
-                totalAB += 1;
-                continue;
+            if (app.getProg().isAfter(start) && app.getProg().isBefore(end)) {
+                totalApp += 1;
+                if (app.getBloodtype().contains("AB")) {
+                    totalAB += 1;
+                    continue;
+                }
+                if (app.getBloodtype().contains("A"))
+                    totalA += 1;
+                if (app.getBloodtype().contains("B"))
+                    totalB += 1;
+                if (app.getBloodtype().contains("O"))
+                    totalAB += 1;
+                if (app.getConfirmed() != null)
+                    totalConfi += 1;
             }
-            if(app.getBloodtype().contains("A"))
-                totalA += 1;
-            if(app.getBloodtype().contains("B"))
-                totalB += 1;
-            if(app.getBloodtype().contains("O"))
-                totalAB += 1;
-            if(app.getConfirmed())
-                totalConfi += 1;
 
 
         }
