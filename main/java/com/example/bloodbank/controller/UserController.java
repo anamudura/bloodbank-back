@@ -181,13 +181,12 @@ public class UserController {
         List<Appointment> app = appointmentRepository.findByIdAndLocations_Id(loc.getId(),id,pageable);
         return ResponseEntity.ok(app);
     }
-    @PostMapping("allapp/{id}/confirmed")
+    @PostMapping("allapp/{id}")
     public ResponseEntity<Appointment> updateConfirmation(
-            @PathVariable("id") Long id,
-            @PathVariable("confirmed") Boolean confirmed
+            @PathVariable("id") Long id
 
     ) throws Exception {
-        Appointment updatedAppointment = appointmentService.updateConfirmation(id, confirmed);
+        Appointment updatedAppointment = appointmentService.updateConfirmation(id, true);
         return ResponseEntity.ok(updatedAppointment);
     }
 

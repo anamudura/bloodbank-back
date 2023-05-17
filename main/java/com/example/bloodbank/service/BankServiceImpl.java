@@ -25,6 +25,7 @@ public class BankServiceImpl implements BankService{
         int totalB = 0;
         int totalO = 0;
         int totalAB = 0;
+        int totalConfi = 0;
         for(Appointment app: totalapp) {
             totalApp += 1;
             if(app.getBloodtype().contains("AB")) {
@@ -37,6 +38,9 @@ public class BankServiceImpl implements BankService{
                 totalB += 1;
             if(app.getBloodtype().contains("O"))
                 totalAB += 1;
+            if(app.getConfirmed())
+                totalConfi += 1;
+
 
         }
         bankStatistics.setNumberOfTotalAppointments(totalApp);
@@ -44,7 +48,9 @@ public class BankServiceImpl implements BankService{
         bankStatistics.setB(totalB);
         bankStatistics.setO(totalO);
         bankStatistics.setAB(totalAB);
-        numberLiters = 0.48f * totalApp; //trebuie modificat in confirmed app cand o sa reusesc
+        bankStatistics.setNumberOfConfirmedAppointments(totalConfi);
+        numberLiters = 0.48f * totalConfi; //trebuie modificat in confirmed app cand o sa reusesc
+        //Update: am reusit
         bankStatistics.setNumberOfLiters(numberLiters);
 
 
