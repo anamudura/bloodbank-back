@@ -7,6 +7,7 @@ import com.example.bloodbank.dto.AppointmentDto;
 import com.example.bloodbank.dto.UserRegDto;
 import com.example.bloodbank.pdf.PdfGenerator;
 import com.example.bloodbank.repo.AppointmentRepository;
+import com.example.bloodbank.repo.LocationsRepository;
 import com.example.bloodbank.repo.RoleRepository;
 import com.example.bloodbank.repo.UserRepository;
 import com.example.bloodbank.service.AppointmentService;
@@ -39,6 +40,7 @@ public class UserController {
     private final LocationService locationService;
     private final AppointmentService appointmentService;
     private final AppointmentRepository appointmentRepository;
+    private final LocationsRepository locationsRepository;
     private final PdfGenerator pdfGenerator;
 
     @PostMapping("/login")
@@ -102,15 +104,21 @@ public class UserController {
     }
 
     @PostMapping("/edituser/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, UserRegDto user) {
+    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody UserRegDto user) {
 
+        System.out.println(user.getEmail());
+        System.out.println(user.getNume());
+        System.out.println(user.getLocation());
+        user.setId(id);
         userService.updateDoctor(user);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping("/editdon/{id}")
-    public ResponseEntity<?> updateDon(@PathVariable("id") Long id, UserRegDto user) {
+    public ResponseEntity<?> updateDon(@PathVariable("id") Long id, @RequestBody UserRegDto user) {
 
+
+        user.setId(id);
         userService.updateDoctor(user);
         return ResponseEntity.ok(user);
     }
@@ -149,11 +157,12 @@ public class UserController {
 
     }
 
-    @PostMapping("/appointment/{id}")
+    @PostMapping("/appointment/{id1}/{id2}")
     public ResponseEntity<?> appointment(@RequestBody AppointmentDto appointmentDto,
-                                         @PathVariable("id") Long id,
+                                         @PathVariable("id1") Long id1,
+                                         @PathVariable("id2") Long id2,
                                          BindingResult result) {
-        appointmentService.save(appointmentDto, id);
+        appointmentService.save(appointmentDto, id1,id2);
         return ResponseEntity.ok(appointmentDto);
     }
 
@@ -206,6 +215,11 @@ public class UserController {
                 .headers(headers)
                 .body(pdf);
 
+    }
+    @GetMapping("getloc/{id}")
+    public ResponseEntity<Optional<Locations>> getLoc(@PathVariable("id") Long id)
+    {
+        return ResponseEntity.ok(locationsRepository.findById(id));
     }
 
 }

@@ -7,9 +7,9 @@ import com.example.bloodbank.dto.AppointmentDto;
 import com.example.bloodbank.email.EmailService;
 import com.example.bloodbank.email.Scheduler;
 import com.example.bloodbank.repo.AppointmentRepository;
+import com.example.bloodbank.repo.LocationsRepository;
 import com.example.bloodbank.repo.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +24,18 @@ public class AppointmentServiceImpl implements AppointmentService{
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final Scheduler scheduler;
+    private final LocationsRepository locationsRepository;
+    //DE VERIFICAT DACA S-A TRECUT DE NUMARUL MAXIM DE PROGRAMARI
+    //STERGE PROGRAMAREA DACA NU S-A CONFIRMAT
+    //PUNE DE INTREBARE DE ACTUALIZAT NUMAR DE PROGRAMARI
+    //IMPLEMENTEAZA REMAINED SPOTS
     @Override
-    public Appointment save(AppointmentDto appointmentDto, Long id) {
+    public Appointment save(AppointmentDto appointmentDto, Long id1, Long id2) {
         Appointment app =
                 new Appointment(appointmentDto.getBloodtype(),appointmentDto.getProg());
-        Users user = userRepository.findById1(id); //de aici returneaza null
-        app.setLocations(user.getBloodbank());
+        Users user = userRepository.findById1(id1); //de aici returneaza null
+        Locations loc = locationsRepository.findById1(id2);
+        app.setLocations(loc);
         app.setUser(user);
         String email = user.getEmail();
         String link = "http://localhost:8080/appointment/{id}";
@@ -41,6 +47,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public List<Appointment> getAppoint(LocalDate nume) {
+        System.out.println(nume);
         return appointmentRepository.findByProg(LocalDate.now());
     }
 

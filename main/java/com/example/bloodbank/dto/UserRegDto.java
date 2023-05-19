@@ -14,7 +14,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class UserRegDto {
     private Long id;
-    private String name;
+    private String nume;
     private String email;
     private String password;
     private String location;
@@ -22,26 +22,26 @@ public class UserRegDto {
 
 
     public UserRegDto(String name, String email, String password, String locatie, Long id) {
-        this.name = name;
+        this.nume = name;
         this.email = email;
         this.password = password;
         this.location = locatie;
     }
 
     public UserRegDto(Users user) {
-        this.name = user.getNume();
+        this.nume = user.getNume();
         this.email = user.getEmail();
         this.password = user.getPassword();;
         this.location = user.getLocation();
         this.roles = user.getRoles();
     }
 
-    public String getName() {
-        return name;
+    public String getNume() {
+        return nume;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNume(String nume) {
+        this.nume = nume;
     }
 
     public String getEmail() {

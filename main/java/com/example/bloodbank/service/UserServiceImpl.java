@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users save(UserRegDto userRegDto){
 
-        Users users = new Users(userRegDto.getName(),userRegDto.getEmail(),userRegDto.getPassword(),userRegDto.getLocation(),
+        Users users = new Users(userRegDto.getNume(),userRegDto.getEmail(),userRegDto.getPassword(),userRegDto.getLocation(),
                 List.of(new Role("ROLE_DONATOR")));
 
         return userRepository.save(users);
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users saveDoc(UserRegDto userRegDto) {
-        Users users = new Users(userRegDto.getName(),userRegDto.getEmail(),userRegDto.getPassword(),userRegDto.getLocation(),
+        Users users = new Users(userRegDto.getNume(),userRegDto.getEmail(),userRegDto.getPassword(),userRegDto.getLocation(),
                 List.of(new Role("ROLE_DOCTOR")));
 
         return userRepository.save(users);
@@ -95,7 +95,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateDoctor(UserRegDto userRegDto) {
-        userRepository.updateDoc(userRegDto.getId(),userRegDto.getEmail(),userRegDto.getLocation(),userRegDto.getName());
+        System.out.println(userRegDto.getEmail());
+        System.out.println(userRegDto.getNume());
+        System.out.println(userRegDto.getLocation());
+        userRepository.updateDoc(userRegDto.getId(),userRegDto.getEmail(),userRegDto.getLocation(),userRegDto.getNume());
     }
 
     @Override

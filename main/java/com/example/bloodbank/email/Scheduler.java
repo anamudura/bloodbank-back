@@ -21,7 +21,7 @@ public class Scheduler {
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
 
-    @Scheduled(cron = "0 0 22 09 * ?")
+    @Scheduled(cron = "0 0 18 * * ?")
     public void sendReminderEmails() {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         List<Appointment> appointments = appointmentRepository.findByProg(tomorrow);
