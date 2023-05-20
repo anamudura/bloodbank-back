@@ -1,7 +1,7 @@
 package com.example.bloodbank.email;
 
-import com.example.bloodbank.appuser.Appointment;
-import com.example.bloodbank.appuser.Users;
+import com.example.bloodbank.entity.Appointment;
+import com.example.bloodbank.entity.Users;
 import com.example.bloodbank.repo.AppointmentRepository;
 import com.example.bloodbank.repo.UserRepository;
 import lombok.AllArgsConstructor;

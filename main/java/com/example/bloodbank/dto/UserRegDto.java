@@ -1,7 +1,7 @@
 package com.example.bloodbank.dto;
 
-import com.example.bloodbank.appuser.Role;
-import com.example.bloodbank.appuser.Users;
+import com.example.bloodbank.entity.Role;
+import com.example.bloodbank.entity.Users;
 import lombok.*;
 
 import java.util.Collection;

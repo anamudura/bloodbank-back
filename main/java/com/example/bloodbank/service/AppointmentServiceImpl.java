@@ -1,18 +1,21 @@
 package com.example.bloodbank.service;
 
-import com.example.bloodbank.appuser.Appointment;
-import com.example.bloodbank.appuser.Locations;
-import com.example.bloodbank.appuser.Users;
+import com.example.bloodbank.entity.Appointment;
+import com.example.bloodbank.entity.Locations;
+import com.example.bloodbank.entity.Users;
 import com.example.bloodbank.dto.AppointmentDto;
-import com.example.bloodbank.email.EmailService;
+import com.example.bloodbank.email.EmailBuilder;
 import com.example.bloodbank.email.Scheduler;
 import com.example.bloodbank.repo.AppointmentRepository;
 import com.example.bloodbank.repo.LocationsRepository;
 import com.example.bloodbank.repo.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,24 +25,32 @@ import java.util.List;
 public class AppointmentServiceImpl implements AppointmentService{
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
-    private final EmailService emailService;
     private final Scheduler scheduler;
     private final LocationsRepository locationsRepository;
-    //DE VERIFICAT DACA S-A TRECUT DE NUMARUL MAXIM DE PROGRAMARI
-    //STERGE PROGRAMAREA DACA NU S-A CONFIRMAT
-    //PUNE DE INTREBARE DE ACTUALIZAT NUMAR DE PROGRAMARI
-    //IMPLEMENTEAZA REMAINED SPOTS
+    private final JavaMailSender javaMailSender;
+
     @Override
     public Appointment save(AppointmentDto appointmentDto, Long id1, Long id2) {
         Appointment app =
                 new Appointment(appointmentDto.getBloodtype(),appointmentDto.getProg());
-        Users user = userRepository.findById1(id1); //de aici returneaza null
+        Users user = userRepository.findById1(id1);
         Locations loc = locationsRepository.findById1(id2);
+        loc.setNrmaximdon(loc.getNrmaximdon() - 1);
         app.setLocations(loc);
         app.setUser(user);
         String email = user.getEmail();
         String link = "http://localhost:8080/appointment/{id}";
-        emailService.send(email,buildEmail(user.getNume(),link));
+        try {
+            MimeMessage emailMessage = new EmailBuilder()
+                    .to(email)
+                    .subject("Appointment confirmation")
+                    .message(buildEmail(user.getNume(), link))
+                    .buildHtml(javaMailSender);
+
+            javaMailSender.send(emailMessage);
+        } catch (MessagingException e) {
+            System.out.println("Ioi eroare la trimitere");
+        }
         scheduler.sendReminderEmails();
         return appointmentRepository.save(app);
 
@@ -60,10 +71,12 @@ public class AppointmentServiceImpl implements AppointmentService{
     public Appointment updateConfirmation(Long appointmentId, Boolean confirmed) throws Exception {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new Exception("Not found"));
+        if(!confirmed)
+            appointment.getLocations().setNrmaximdon(appointment.getLocations().getNrmaximdon() + 1);
         appointment.setConfirmed(confirmed);
         return appointmentRepository.save(appointment);
     }
-
+    
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +

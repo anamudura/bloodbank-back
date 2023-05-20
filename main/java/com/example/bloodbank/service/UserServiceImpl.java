@@ -1,8 +1,8 @@
 package com.example.bloodbank.service;
 
-import com.example.bloodbank.appuser.Locations;
-import com.example.bloodbank.appuser.Role;
-import com.example.bloodbank.appuser.Users;
+import com.example.bloodbank.entity.Locations;
+import com.example.bloodbank.entity.Role;
+import com.example.bloodbank.entity.Users;
 import com.example.bloodbank.repo.RoleRepository;
 import com.example.bloodbank.repo.UserRepository;
 import com.example.bloodbank.dto.UserRegDto;
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(users.getEmail(), users.getPassword(), mapRolesToAuthorities((Collection<Role>) users.getRoles()));
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<com.example.bloodbank.appuser.Role> roles) {
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<com.example.bloodbank.entity.Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 

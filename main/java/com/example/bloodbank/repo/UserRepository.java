@@ -1,7 +1,7 @@
 package com.example.bloodbank.repo;
 
-import com.example.bloodbank.appuser.Locations;
-import com.example.bloodbank.appuser.Users;
+import com.example.bloodbank.entity.Locations;
+import com.example.bloodbank.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Transactional

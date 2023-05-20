@@ -1,7 +1,7 @@
 package com.example.bloodbank.service;
 
-import com.example.bloodbank.appuser.Locations;
-import com.example.bloodbank.appuser.Users;
+import com.example.bloodbank.entity.Locations;
+import com.example.bloodbank.entity.Users;
 import com.example.bloodbank.dto.UserRegDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;

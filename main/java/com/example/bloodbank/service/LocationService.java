@@ -1,6 +1,6 @@
 package com.example.bloodbank.service;
 
-import com.example.bloodbank.appuser.Locations;
+import com.example.bloodbank.entity.Locations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

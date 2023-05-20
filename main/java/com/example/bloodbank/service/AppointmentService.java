@@ -1,6 +1,6 @@
 package com.example.bloodbank.service;
 
-import com.example.bloodbank.appuser.Appointment;
+import com.example.bloodbank.entity.Appointment;
 import com.example.bloodbank.dto.AppointmentDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,5 +15,4 @@ public interface AppointmentService {
     List<Appointment> getAppoint(LocalDate nume);
     List<Appointment> getappDoc(LocalDate date, Long id1, Long id2);
     Appointment updateConfirmation(Long appointmentId, Boolean confirmed) throws Exception;
-
 }

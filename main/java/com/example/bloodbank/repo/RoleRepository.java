@@ -1,6 +1,6 @@
 package com.example.bloodbank.repo;
 
-import com.example.bloodbank.appuser.Role;
+import com.example.bloodbank.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

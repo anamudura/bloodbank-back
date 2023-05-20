@@ -1,7 +1,7 @@
 package com.example.bloodbank.service;
 
-import com.example.bloodbank.appuser.Appointment;
-import com.example.bloodbank.appuser.BankStatistics;
+import com.example.bloodbank.entity.Appointment;
+import com.example.bloodbank.entity.BankStatistics;
 import com.example.bloodbank.repo.AppointmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

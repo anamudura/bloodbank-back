@@ -1,6 +1,6 @@
 package com.example.bloodbank.pdf;
 
-import com.example.bloodbank.appuser.BankStatistics;
+import com.example.bloodbank.entity.BankStatistics;
 import com.example.bloodbank.repo.AppointmentRepository;
 import com.example.bloodbank.service.BankService;
 import com.itextpdf.text.Document;

@@ -1,6 +1,6 @@
 package com.example.bloodbank.service;
 
-import com.example.bloodbank.appuser.Locations;
+import com.example.bloodbank.entity.Locations;
 import com.example.bloodbank.repo.LocationsRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
